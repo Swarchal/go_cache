@@ -9,7 +9,7 @@ if the object has expired.
 
 It is up to the caller to remove any expired keys.
 
-```
+```go
 Cache.Add(key string) []bytes
 Cache.Delete(key string)
 Cache.Get(key string) ([]bytes, error)
@@ -38,7 +38,7 @@ type Person struct {
 
 func main() {
   // create cache with a 60 second lifetime
-	cache := MakeCache(60)
+  cache := MakeCache(60)
 
   // store JSON in cache
 	bob := Person{"Bob", 60}
