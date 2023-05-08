@@ -22,38 +22,38 @@ Example:
 
 ```go
 import (
-  "encoding/json"
-  "fmt"
-  "time"
+    "encoding/json"
+    "fmt"
+    "time"
 
-  "github.com/swarchal/go_cache"
+    "github.com/swarchal/go_cache"
 )
 
 
 type Person struct {
-	Name string `json:"name"`
-	Age  int    `json:"age"`
+    Name string `json:"name"`
+    Age  int    `json:"age"`
 }
 
 
 func main() {
-  // create cache with a 60 second lifetime
-  cache := MakeCache(60)
+    // create cache with a 60 second lifetime
+    cache := MakeCache(60)
 
-  // store JSON in cache
-	bob := Person{"Bob", 60}
-	b, err := json.Marshal(&bob)
-	if err != nil {
-		panic(err)
-	}
-	cache.Add("bob", b)
+    // store JSON in cache
+    bob := Person{"Bob", 60}
+    b, err := json.Marshal(&bob)
+    if err != nil {
+        panic(err)
+    }
+    cache.Add("bob", b)
 
-	out, err := cache.Get("bob")
-	if err != nil {
-		fmt.Println(err)
-	} else {
-		fmt.Println(string(out))
-	}
+    out, err := cache.Get("bob")
+    if err != nil {
+        fmt.Println(err)
+    } else {
+        fmt.Println(string(out))
+    }
 }
 ```
 
