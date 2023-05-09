@@ -10,9 +10,25 @@ if the object has expired.
 It is up to the caller to remove any expired keys.
 
 ```go
-Cache.Add(key string) []bytes
+type Cache struct {
+	store    map[string]Entry
+	lifetime time.Duration
+}
+
+type Entry struct {
+	data      []byte
+	timestamp time.Time
+}
+
+type Response struct {
+	Data   []byte
+	Exists bool
+  Fresh  bool
+}
+
+Cache.Add(key string, data []byte)
 Cache.Delete(key string)
-Cache.Get(key string) ([]bytes, error)
+Cache.Get(key string) Response
 Cache.Exists(key string) bool
 Cache.IsFresh(key string) bool
 ```
@@ -48,11 +64,14 @@ func main() {
     }
     cache.Add("bob", b)
 
-    out, err := cache.Get("bob")
-    if err != nil {
-        fmt.Println(err)
-    } else {
-        fmt.Println(string(out))
+    r := cache.Get("bob")
+
+    if (r.Exists) && (r.Fresh) {
+        fmt.Println(string(r.Data))
+    }
+    // delete if it's stale
+    if !r.Fresh {
+        cache.Delete("bob") 
     }
 }
 ```

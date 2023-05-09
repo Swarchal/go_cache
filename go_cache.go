@@ -15,6 +15,12 @@ type Entry struct {
 	timestamp time.Time
 }
 
+type Response struct {
+	Data   []byte
+	Exists bool
+	Fresh  bool
+}
+
 func ToEntry(data []byte) Entry {
 	return Entry{data, time.Now()}
 }
@@ -30,15 +36,15 @@ func (e Entry) IsFresh(lifetime time.Duration) bool {
 }
 
 // Retrieve an Entry from cache if it's present and fresh
-func (c *Cache) Get(key string) ([]byte, error) {
+func (c *Cache) Get(key string) Response {
 	entry, exists := c.store[key]
 	if !exists {
-		return nil, fmt.Errorf("%s does not exist", key)
+		return Response{nil, false, false}
 	}
 	if entry.IsStale(c.lifetime) {
-		return nil, fmt.Errorf("%s exists but is stale", key)
+		return Response{nil, true, false}
 	}
-	return entry.data, nil
+	return Response{entry.data, true, true}
 }
 
 // Add object to cache
