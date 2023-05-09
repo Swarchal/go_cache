@@ -11,19 +11,19 @@ It is up to the caller to remove any expired keys.
 
 ```go
 type Cache struct {
-	store    map[string]Entry
-	lifetime time.Duration
+    store    map[string]Entry
+    lifetime time.Duration
 }
 
 type Entry struct {
-	data      []byte
-	timestamp time.Time
+    data      []byte
+    timestamp time.Time
 }
 
 type Response struct {
-	Data   []byte
-	Exists bool
-  Fresh  bool
+    Data   []byte
+    Exists bool
+    Fresh  bool
 }
 
 Cache.Add(key string, data []byte)
