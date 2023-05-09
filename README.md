@@ -7,8 +7,6 @@ the cache will have a timestamp attached to it. When trying to retrieve the
 object the `object_timestamp` + `cache_lifetime` is compared against the current time to check
 if the object has expired.
 
-It is up to the caller to remove any expired keys.
-
 ```go
 type Cache struct {
     store    map[string]Entry
@@ -20,15 +18,10 @@ type Entry struct {
     timestamp time.Time
 }
 
-type Response struct {
-    Data   []byte
-    Exists bool
-    Fresh  bool
-}
 
 Cache.Add(key string, data []byte)
 Cache.Delete(key string)
-Cache.Get(key string) Response
+Cache.Get(key string) []byte
 Cache.Exists(key string) bool
 Cache.IsFresh(key string) bool
 ```
@@ -66,12 +59,8 @@ func main() {
 
     r := cache.Get("bob")
 
-    if (r.Exists) && (r.Fresh) {
-        fmt.Println(string(r.Data))
-    }
-    // delete if it's stale
-    if !r.Fresh {
-        cache.Delete("bob") 
+    if r != nil {
+        fmt.Println(string(r))
     }
 }
 ```
