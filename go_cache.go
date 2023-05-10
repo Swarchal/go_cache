@@ -19,14 +19,14 @@ func ToEntry(data []byte) Entry {
 	return Entry{data, time.Now()}
 }
 
-// Check if an Entry is stale based on the Cache lifetime
-func (e Entry) IsStale(lifetime time.Duration) bool {
-	return e.timestamp.Add(lifetime).Before(time.Now())
+// Check if an Entry has expired based on the Cache lifetime
+func (e Entry) HasExpired(lifetime time.Duration) bool {
+	return time.Now().After(e.timestamp.Add(lifetime))
 }
 
 // Check if an Entry is fresh based on the Cache lifetime
 func (e Entry) IsFresh(lifetime time.Duration) bool {
-	return !e.IsStale(lifetime)
+	return !e.HasExpired(lifetime)
 }
 
 // Retrieve an Entry from cache if it's present and fresh
@@ -35,7 +35,7 @@ func (c *Cache) Get(key string) []byte {
 	if !exists {
 		return nil
 	}
-	if entry.IsStale(c.lifetime) {
+	if entry.HasExpired(c.lifetime) {
 		c.Delete(key)
 		return nil
 	}
