@@ -19,6 +19,19 @@ func ToEntry(data []byte) Entry {
 	return Entry{data, time.Now()}
 }
 
+// ClearExpired removes expired entries from the cache, it runs continuously
+// at a set interval, and should be used as a background go func.
+func ClearExpired(cache *Cache, interval time.Duration) {
+	for {
+		for key, entry := range cache.store {
+			if entry.HasExpired(cache.lifetime) {
+				delete(cache.store, key)
+			}
+		}
+		time.Sleep(interval)
+	}
+}
+
 // Check if an Entry has expired based on the Cache lifetime
 func (e Entry) HasExpired(lifetime time.Duration) bool {
 	return time.Now().After(e.timestamp.Add(lifetime))

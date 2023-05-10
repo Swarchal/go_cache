@@ -49,6 +49,9 @@ func main() {
     // create cache with a 60 second lifetime
     cache := MakeCache(60)
 
+    // auto-remove expired entries every minute
+    go ClearExpired(cache, time.Minute)
+
     // store JSON in cache
     bob := Person{"Bob", 60}
     b, err := json.Marshal(&bob)
