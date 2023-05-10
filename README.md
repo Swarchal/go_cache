@@ -50,7 +50,7 @@ func main() {
     cache := MakeCache(60)
 
     // auto-remove expired entries every minute
-    go ClearExpired(cache, time.Minute)
+    go cache.ClearExpired(time.Minute)
 
     // store JSON in cache
     bob := Person{"Bob", 60}
